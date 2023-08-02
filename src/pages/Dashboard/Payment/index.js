@@ -2,9 +2,22 @@ import styled from 'styled-components';
 import Ticket from '../../../components/Ticket';
 import { Typography } from '@material-ui/core';
 import useEnrollment from '../../../hooks/api/useEnrollment';
+import { useState } from 'react';
+import ProcessPayment from '../../../components/ProcessPayment/ProcessPayment';
 
 export default function Payment() {
   const { enrollment } = useEnrollment(); //busca informações da inscrição do usuário logado
+
+  const [reservedTicket, setReservedTicket] = useState(null); //TODO: 
+
+  if(reservedTicket !== null) {
+    return (
+      <>
+        <StyledTypography variant="h4">Ingresso e Pagamento</StyledTypography>
+        <ProcessPayment ticket={reservedTicket}/>
+      </>
+    );
+  }
 
   return (
     <>

@@ -6,7 +6,7 @@ import { useState } from 'react';
 import ProcessPayment from '../../../components/ProcessPayment/ProcessPayment';
 
 export default function Payment() {
-  const { enrollment } = useEnrollment(); 
+  const { enrollment } = useEnrollment();
 
   const [reservedTicket, setReservedTicket] = useState(null); //TODO: 
 

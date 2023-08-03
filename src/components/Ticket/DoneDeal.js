@@ -1,25 +1,30 @@
 import styled from 'styled-components';
 import useCreateTicket from '../../hooks/api/useCreateTicket';
 import { toast } from 'react-toastify';
-import useTicket from '../../hooks/useTicket';
+import { useState } from 'react';
 
 export default function DoneDeal({ price, id }) {
   const { createTicket } = useCreateTicket();
-  const { setTicketData } = useTicket();
+  const [ disabledButton, setDisabledButton ] = useState(false);
+  
   async function bookTicket() {
+    setDisabledButton(true);
     const body = { ticketTypeId: id };
     try {
-      const result = await createTicket(body);
-      setTicketData(result);
+      await createTicket(body);
       toast('Ticket criado com sucesso');
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch {
       toast('Não foi possível criar o ticket!');
+      setDisabledButton(false);
     }
   }
   return (
     <DivDone>
       <p>Fechado! O total ficou em <strong>R$ {price}</strong>. Agora é só confirmar:</p>
-      <button onClick={() => bookTicket()}>RESERVAR INGRESSO</button>
+      <button onClick={() => bookTicket()} disabled={disabledButton} >RESERVAR INGRESSO</button>
     </DivDone>
   );
 }

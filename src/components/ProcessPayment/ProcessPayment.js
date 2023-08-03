@@ -3,10 +3,8 @@ import { useState } from 'react';
 import ConfirmedPayment from './ConfirmedPayment';
 import PaymentForms from './PaymentForms';
 
-export default function ProcessPayment() {
-  const [confirmed, setConfirmed] = useState(false);
-
-  const ticket = { id: 2, TicketType: { price: 2000, isRemote: false, includesHotel: true } }; //FIXME: apagar depois
+export default function ProcessPayment({ ticket }) {
+  const [confirmed, setConfirmed] = useState(ticket?.status === 'PAID' ? true : false);
 
   return (
     <>
@@ -17,10 +15,10 @@ export default function ProcessPayment() {
             {ticket.TicketType.isRemote ? 'Online':'Presencial'} +  
             {ticket.TicketType.includesHotel ? ' Com hotel':' Sem hotel'} 
           </h4>
-          <p>R$ {ticket.TicketType.price/100}</p>
+          <p>R$ {ticket.TicketType.price}</p>
         </Card>
         <h3>Pagamento</h3>
-        {confirmed ? <ConfirmedPayment />: <PaymentForms />}        
+        {confirmed ? <ConfirmedPayment />: <PaymentForms setConfirmed={setConfirmed}/>}        
       </Process>
     </>
   );

@@ -1,59 +1,54 @@
 import styled from 'styled-components';
-import useTicket from '../../hooks/api/useTicket';
 import { useState } from 'react';
 import { useEffect } from 'react';
+import useTicketTypes from '../../hooks/api/useTicketTypes';
+import DoneDeal from './DoneDeal';
 
 export default function Ticket() {
-  const { tickets } = useTicket();
-  const [priceForHotel, setPriceForHotel] = useState(0);
-  const [priceForRemoteTicket, setPriceForRemoteTicket] = useState(0);
-  const [priceForInPersonTicket, setPriceForInPersonTicket] = useState(0);
+  const { ticketTypes } = useTicketTypes();
+  const [ticketInPersonWithHotel, setTicketInPersonWithHotel] = useState({});
+  const [ticketInPersonWithoutHotel, setTicketInPersonWithoutHotel] = useState({});
+  const [ticketRemote, setTicketRemote] = useState({});
   const [isRemote, setIsRemote] = useState(null);
   const [includesHotel, setIncludesHotel] = useState(null);
 
   useEffect(() => {
-    if (tickets) {
-      let hotelPriceTotal = 0;
-      let inPersonTicketPriceWithoutHotel = 0;
+    if (ticketTypes) {
+      ticketTypes.forEach(ticketType => {
+        const { isRemote, includesHotel } = ticketType;
 
-      tickets.forEach(t => {
-        if (t.isRemote) {
-          setPriceForRemoteTicket(t.price);
+        if (isRemote) {
+          setTicketRemote(ticketType);
+        } else if (includesHotel) {
+          setTicketInPersonWithHotel(ticketType);
         } else {
-          if (!t.includesHotel) {
-            inPersonTicketPriceWithoutHotel = t.price;
-            setPriceForInPersonTicket(t.price);
-          } else {
-            hotelPriceTotal = t.price;
-          }
+          setTicketInPersonWithoutHotel(ticketType);
         }
       });
-      setPriceForHotel(hotelPriceTotal - inPersonTicketPriceWithoutHotel);
     }
-  }, [tickets]);
+  }, [ticketTypes]);
 
-  function handleClick(choice) {
+  function handleIsEventRemote(isRemoteEvent) {
     if (isRemote === null) {
-      setIsRemote(choice);
-    } else {
-      if (isRemote !== choice) {
-        setIsRemote(choice);
-        setIncludesHotel(null);
-      }
+      setIsRemote(isRemoteEvent);
+    } else if (isRemote !== isRemoteEvent) {
+      setIsRemote(isRemoteEvent);
+      setIncludesHotel(null);
     }
   }
+
   return (
     <>
       <DivTicket>
         <h1>Primeiro, escolha sua modalidade de ingresso</h1>
         <div>
-          <Card onClick={() => handleClick(false)} active={isRemote === false}>
+          <Card onClick={() => handleIsEventRemote(false)} active={isRemote === false}>
             <p>Presencial</p>
-            <span>R$ {priceForInPersonTicket}</span>
+            <span>R$ {ticketInPersonWithoutHotel.price}</span>
           </Card>
-          <Card onClick={() => handleClick(true)} active={isRemote === true}>
+          <Card onClick={() => handleIsEventRemote(true)} active={isRemote === true}>
             <p>Online</p>
-            <span>R$ {priceForRemoteTicket}</span>
+            <span>R$ {ticketRemote.price}</span>
           </Card>
         </div>
       </DivTicket>
@@ -68,10 +63,22 @@ export default function Ticket() {
             </Card>
             <Card onClick={() => setIncludesHotel(true)} active={includesHotel === true}>
               <p>Com Hotel</p>
-              <span>+ R$ {priceForHotel}</span>
+              <span>+ R$ {ticketInPersonWithHotel.price - ticketInPersonWithoutHotel.price}</span>
             </Card>
           </div>
         </DivTicket>
+      }
+
+      {isRemote === true &&
+        <DoneDeal price={ticketRemote.price} id={ticketRemote.id}/>
+      }
+
+      {includesHotel === false &&
+        <DoneDeal price={ticketInPersonWithoutHotel.price} id={ticketInPersonWithoutHotel.id}/>
+      }
+
+      {includesHotel === true &&
+        <DoneDeal price={ticketInPersonWithHotel.price} id={ticketInPersonWithHotel.id}/>
       }
     </>
   );

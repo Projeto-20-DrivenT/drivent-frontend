@@ -14,7 +14,7 @@ export default function Payment() {
     return (
       <>
         <StyledTypography variant="h4">Ingresso e Pagamento</StyledTypography>
-        <ProcessPayment ticket={reservedTicket}/>
+        <ProcessPayment />
       </>
     );
   }

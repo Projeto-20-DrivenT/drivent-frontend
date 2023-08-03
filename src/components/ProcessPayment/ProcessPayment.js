@@ -4,19 +4,23 @@ import { useState } from 'react';
 import ConfirmedPayment from './ConfirmedPayment';
 
 export default function ProcessPayment() {
-  const [confirmed, setConfirmed] = useState(false);
+  const [confirmed, setConfirmed] = useState(true);
+
+  const ticket = { id: 2, TicketType: { price: 2000, isRemote: false, includesHotel: true } }; //FIX: apagar depois
 
   return (
     <>
-      <StyledTypography variant="h4">Ingresso e Pagamento</StyledTypography>
       <Process>
         <h3>Ingresso Escolhido</h3>
         <Card>
-          <h4>Presencial + Com Hotel</h4>
-          <p>R$ 600</p>
+          <h4>
+            {ticket.TicketType.isRemote ? 'Online':'Presencial'} +  
+            {ticket.TicketType.includesHotel ? ' Com hotel':' Sem hotel'} 
+          </h4>
+          <p>R$ {ticket.TicketType.price/100}</p>
         </Card>
         <h3>Pagamento</h3>
-        <ConfirmedPayment />
+        {confirmed ? <ConfirmedPayment />: <div>forms de pagamento</div>}        
       </Process>
     </>
   );

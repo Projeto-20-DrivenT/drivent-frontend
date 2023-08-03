@@ -5,15 +5,17 @@ import Hotels from '../../../components/Hotels';
 
 export default function Hotel() {
   const { tickets } = useTicket();
+  const ticket = undefined;
+  const isRemote = true;
 
   return (
     <>
       <StyledTypography variant="h4">Escolha de hotel e quarto</StyledTypography>
-      {(!tickets?.length || !tickets[0]?.status === 'PAID') && (
+      {!(ticket?.status === 'PAID') && (
         <Message>Você precisa ter confirmado pagamento antes de fazer a escolha de hospedagem</Message>
       )}
-      {/* {tickets[0]?.ticketTypeId}
-      {tickets[0]?.status === 'PAID' && <Hotels />} */}
+      {}
+      {ticket?.status === 'PAID' && <Hotels />}
     </>
   );
 }

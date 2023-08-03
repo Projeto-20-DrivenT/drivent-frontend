@@ -10,7 +10,7 @@ export default function Payment() {
 
   const [reservedTicket, setReservedTicket] = useState(null); //TODO: 
 
-  if(reservedTicket !== null) {
+  if(true) {
     return (
       <>
         <StyledTypography variant="h4">Ingresso e Pagamento</StyledTypography>

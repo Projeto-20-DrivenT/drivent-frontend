@@ -1,12 +1,12 @@
 import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
 import { useState } from 'react';
 import ConfirmedPayment from './ConfirmedPayment';
+import PaymentForms from './PaymentForms';
 
 export default function ProcessPayment() {
-  const [confirmed, setConfirmed] = useState(true);
+  const [confirmed, setConfirmed] = useState(false);
 
-  const ticket = { id: 2, TicketType: { price: 2000, isRemote: false, includesHotel: true } }; //FIX: apagar depois
+  const ticket = { id: 2, TicketType: { price: 2000, isRemote: false, includesHotel: true } }; //FIXME: apagar depois
 
   return (
     <>
@@ -20,15 +20,11 @@ export default function ProcessPayment() {
           <p>R$ {ticket.TicketType.price/100}</p>
         </Card>
         <h3>Pagamento</h3>
-        {confirmed ? <ConfirmedPayment />: <div>forms de pagamento</div>}        
+        {confirmed ? <ConfirmedPayment />: <PaymentForms />}        
       </Process>
     </>
   );
 }
-
-const StyledTypography = styled(Typography)`
-  margin-bottom: 20px!important;
-`;
 
 const Process = styled.div`
     color: #8E8E8E;

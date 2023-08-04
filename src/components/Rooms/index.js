@@ -25,6 +25,7 @@ const H1 = styled.h1`
 `;
 const RoomsContainer = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 19px;
 `;
 

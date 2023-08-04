@@ -18,7 +18,7 @@ export default function ProcessPayment({ ticket }) {
           <p>R$ {ticket.TicketType.price}</p>
         </Card>
         <h3>Pagamento</h3>
-        {confirmed ? <ConfirmedPayment />: <PaymentForms setConfirmed={setConfirmed}/>}        
+        {confirmed ? <ConfirmedPayment />: <PaymentForms setConfirmed={setConfirmed} ticketId={ticket.id}/>}        
       </Process>
     </>
   );

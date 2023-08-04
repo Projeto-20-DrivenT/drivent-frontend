@@ -6,8 +6,13 @@ import Button from '../Form/Button';
 import { toast } from 'react-toastify';
 import { useForm } from '../../hooks/useForm';
 import creditCardValidation from './CreditCardFormsValidation';
+import useProcessPayment from '../../hooks/api/useProcessPayment';
+import { useState } from 'react';
 
-export default function PaymentForms({ setConfirmed }) {
+export default function PaymentForms({ setConfirmed, ticketId }) {
+  const { payment, paymentLoading, paymentError, processPayment } = useProcessPayment();
+  const [issuer, setIssuer] = useState('');
+
   const {
     handleSubmit,
     handleChange,
@@ -17,11 +22,18 @@ export default function PaymentForms({ setConfirmed }) {
   } = useForm({
     validations: creditCardValidation,
 
-    onSubmit: () => { 
-      console.log('submit: ', data);
-      //TODO: postar pagamento
-      setConfirmed(prev => !prev);
-      toast('Pagamento realizado com sucesso!');
+    onSubmit: async() => { 
+      const body = {
+        ticketId, 
+        cardData: { ...data, issuer } };
+
+      try {
+        await processPayment(body);
+        setConfirmed(prev => !prev);
+        toast('Pagamento realizado com sucesso!');
+      } catch ( err ) {
+        toast('Não foi possivel realizar o pagamento!');
+      };
     },
 
     initialValues: {
@@ -42,6 +54,7 @@ export default function PaymentForms({ setConfirmed }) {
           cvc={data.cvc}
           name={data.name}
           focused={data.focus}
+          callback={ (type) => setIssuer(type.issuer)}
         />
         <form>
           <Input
@@ -96,7 +109,7 @@ export default function PaymentForms({ setConfirmed }) {
           {errors.cvc && <small className='paymentInputCvc'>{errors.cvc}</small>}
         </form>
       </CardForms>
-      <Button onClick={ handleSubmit }>
+      <Button onClick={ handleSubmit } disabled={ paymentLoading }>
         Finalizar Compra
       </Button>
     </>

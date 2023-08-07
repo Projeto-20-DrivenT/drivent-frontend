@@ -25,7 +25,7 @@ export default function Hotel() {
     const body = { roomId: selectedRoomId };
     try {
       await bookingRoom(token, body);
-      setHasBooking(true);
+      window.location.reload();
     } catch (err) {
       console.log(err);
     } finally {
@@ -36,12 +36,15 @@ export default function Hotel() {
   useEffect(() => {
     myBooking?.id && setHasBooking(true);
   }, [myBooking]);
+  useEffect(() => {
+    myBooking?.id && setHasBooking(true);
+  }, [myBooking]);
 
   return (
     <>
       <StyledTypography variant="h4">Escolha de hotel e quarto</StyledTypography>
       {(ticketLoading || myBookingLoading) && 'Loading'}
-      {!myBookingLoading ? hasBooking ? <MyRoom room={myBooking.Room}/> : 
+      {!myBookingLoading ? hasBooking ? <MyRoom room={myBooking?.Room}/> : 
         <> 
           {!ticketLoading && !(ticket?.status === 'PAID') && (
             <Message>
@@ -49,17 +52,17 @@ export default function Hotel() {
               de fazer a escolha de hospedagem
             </Message>
           )}
-          {!ticketLoading && ticket?.status === 'PAID' && (ticket?.TicketType?.isRemote) && (
+          {!ticketLoading && ticket?.status === 'PAID' && (ticket?.TicketType?.isRemote || !ticket?.TicketType?.includesHotel) && (
             <Message>
               Sua modalidade de ingresso não inclui hospedagem <br />
               Prossiga para a escolha de atividades
             </Message>
           )}
-          {!ticketLoading && ticket?.status === 'PAID' && !ticket?.TicketType?.isRemote && (
+          {!ticketLoading && ticket?.status === 'PAID' && (!ticket?.TicketType?.isRemote && ticket?.TicketType?.includesHotel) && (
             <Hotels selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} selectedHotelId={selectedHotelId} setSelectedHotelId={setSelectedHotelId} setSelectedRoomId={setSelectedRoomId}/>
           )}
-          {!ticketLoading && ticket?.status === 'PAID' && !ticket?.TicketType?.isRemote && selectedHotelId && <Rooms hotelId={selectedHotelId} selectedRoomId={selectedRoomId} setSelectedRoomId={setSelectedRoomId}/>}
-          {!ticketLoading && ticket?.status === 'PAID' && !ticket?.TicketType?.isRemote && selectedHotelId && selectedRoomId && <BookingButton onClick={handleClick} disabled={isBooking}>RESERVAR QUARTO</BookingButton>}
+          {!ticketLoading && ticket?.status === 'PAID' && (!ticket?.TicketType?.isRemote && ticket?.TicketType?.includesHotel) && selectedHotelId && <Rooms hotelId={selectedHotelId} selectedRoomId={selectedRoomId} setSelectedRoomId={setSelectedRoomId}/>}
+          {!ticketLoading && ticket?.status === 'PAID' && (!ticket?.TicketType?.isRemote && ticket?.TicketType?.includesHotel) && selectedHotelId && selectedRoomId && <BookingButton onClick={handleClick} disabled={isBooking}>RESERVAR QUARTO</BookingButton>}
         </>
         : ''
       }

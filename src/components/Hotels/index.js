@@ -15,7 +15,7 @@ const Hotels = ({ selectedHotel, setSelectedHotel, selectedHotelId, setSelectedH
       <H1>Primeiro, escolha seu hotel</H1>
       <HotelsContainer>
         {!hotelsLoading &&
-          data.length &&
+          data?.length &&
           data?.map((hotel, key) => (
             <Hotel key={key} hotel={hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} selectedHotelId={selectedHotelId} setSelectedHotelId={setSelectedHotelId} setSelectedRoomId={setSelectedRoomId} />
           ))}

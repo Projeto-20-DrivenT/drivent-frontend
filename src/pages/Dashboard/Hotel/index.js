@@ -36,12 +36,15 @@ export default function Hotel() {
   useEffect(() => {
     myBooking?.id && setHasBooking(true);
   }, [myBooking]);
+  useEffect(() => {
+    myBooking?.id && setHasBooking(true);
+  }, [myBooking]);
 
   return (
     <>
       <StyledTypography variant="h4">Escolha de hotel e quarto</StyledTypography>
       {(ticketLoading || myBookingLoading) && 'Loading'}
-      {!myBookingLoading ? hasBooking ? <MyRoom room={myBooking.Room}/> : 
+      {!myBookingLoading ? hasBooking ? <MyRoom room={myBooking?.Room}/> : 
         <> 
           {!ticketLoading && !(ticket?.status === 'PAID') && (
             <Message>

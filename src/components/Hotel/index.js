@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useRoom from '../../hooks/api/useRoom';
+import useHotelBooking from '../../hooks/api/useHotelBooking';
 
 function countRooms(hotel) {
   if (hotel?.Rooms?.length) {
@@ -16,11 +17,14 @@ function countRooms(hotel) {
 
 const Hotel = ({ hotel, selectedHotel, setSelectedHotel, selectedHotelId, setSelectedHotelId, setSelectedRoomId }) => {
   const { rooms, /* roomsLoading, roomsError */ } = useRoom(hotel.id);
+  const { hotelBookings } = useHotelBooking(hotel.id);
   let [singleCount, doubleCount, tripleCount] = countRooms(rooms);
+  const [hotelCapacity, setHotelCapacity] = useState(0);
   const [types, setTypes] = useState('');
 
   useEffect(() => {
     [singleCount, doubleCount, tripleCount] = countRooms(rooms);
+    setHotelCapacity(1*singleCount + 2*doubleCount + 3*tripleCount);
   }, [rooms]);
 
   useEffect(() => {
@@ -62,7 +66,7 @@ const Hotel = ({ hotel, selectedHotel, setSelectedHotel, selectedHotelId, setSel
       </div>
       <div>
         <H2>Vagas disponíveis:</H2>
-        <P>{hotel?.vacancies}</P>
+        <P>{hotelCapacity - hotelBookings?.length}</P>
       </div>
     </HotelContainer>
   );

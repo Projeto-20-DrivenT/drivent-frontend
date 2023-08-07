@@ -36,9 +36,6 @@ export default function Hotel() {
   useEffect(() => {
     myBooking?.id && setHasBooking(true);
   }, [myBooking]);
-  useEffect(() => {
-    myBooking?.id && setHasBooking(true);
-  }, [myBooking]);
 
   return (
     <>

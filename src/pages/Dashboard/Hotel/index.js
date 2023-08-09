@@ -9,15 +9,15 @@ import useToken from '../../../hooks/useToken';
 import useMyBooking from '../../../hooks/api/useMyBooking';
 import { useEffect } from 'react';
 import MyRoom from '../../../components/MyRoom';
+import usehotelContext from '../../../hooks/useHotelContext';
 
 export default function Hotel() {
+  const { selectedHotelId, selectedRoomId } = usehotelContext();
   const { ticket, ticketLoading } = useGetTicket();
   const { myBooking, myBookingLoading } = useMyBooking();
-  const [selectedHotel, setSelectedHotel] = useState({ id: undefined, Rooms: [] });
-  const [selectedHotelId, setSelectedHotelId] = useState(undefined);
-  const [selectedRoomId, setSelectedRoomId] = useState(undefined);
   const [isBooking, setIsBooking] = useState(false);
   const [hasBooking, setHasBooking] = useState(false);
+
   const token = useToken();
 
   async function handleClick() {
@@ -56,10 +56,14 @@ export default function Hotel() {
             </Message>
           )}
           {!ticketLoading && ticket?.status === 'PAID' && (!ticket?.TicketType?.isRemote && ticket?.TicketType?.includesHotel) && (
-            <Hotels selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} selectedHotelId={selectedHotelId} setSelectedHotelId={setSelectedHotelId} setSelectedRoomId={setSelectedRoomId}/>
+            <Hotels />
           )}
-          {!ticketLoading && ticket?.status === 'PAID' && (!ticket?.TicketType?.isRemote && ticket?.TicketType?.includesHotel) && selectedHotelId && <Rooms hotelId={selectedHotelId} selectedRoomId={selectedRoomId} setSelectedRoomId={setSelectedRoomId}/>}
-          {!ticketLoading && ticket?.status === 'PAID' && (!ticket?.TicketType?.isRemote && ticket?.TicketType?.includesHotel) && selectedHotelId && selectedRoomId && <BookingButton onClick={handleClick} disabled={isBooking}>RESERVAR QUARTO</BookingButton>}
+          {!ticketLoading && ticket?.status === 'PAID' && (!ticket?.TicketType?.isRemote && ticket?.TicketType?.includesHotel) && selectedHotelId && 
+            <Rooms />
+          }
+          {!ticketLoading && ticket?.status === 'PAID' && (!ticket?.TicketType?.isRemote && ticket?.TicketType?.includesHotel) && selectedHotelId && selectedRoomId && 
+            <BookingButton onClick={handleClick} disabled={isBooking}>RESERVAR QUARTO</BookingButton>
+          }
         </>
         : ''
       }

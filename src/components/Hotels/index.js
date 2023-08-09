@@ -3,7 +3,7 @@ import Hotel from '../Hotel';
 import styled from 'styled-components';
 import useHotel from '../../hooks/api/useHotel';
 
-const Hotels = ({ selectedHotel, setSelectedHotel, selectedHotelId, setSelectedHotelId, setSelectedRoomId }) => {
+const Hotels = () => {
   const { hotels, hotelsLoading, /* hotelsError */ } = useHotel();
   const [data, setData] = useState();
 
@@ -17,7 +17,7 @@ const Hotels = ({ selectedHotel, setSelectedHotel, selectedHotelId, setSelectedH
         {!hotelsLoading &&
           data?.length &&
           data?.map((hotel, key) => (
-            <Hotel key={key} hotel={hotel} selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} selectedHotelId={selectedHotelId} setSelectedHotelId={setSelectedHotelId} setSelectedRoomId={setSelectedRoomId} />
+            <Hotel key={key} hotel={hotel} />
           ))}
       </HotelsContainer>
     </>

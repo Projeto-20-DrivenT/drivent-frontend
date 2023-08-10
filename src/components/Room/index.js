@@ -9,7 +9,6 @@ const Room = ({ room }) => {
   const { bookings } = useBooking(room.id);
   const [books, setBooks] = useState(0);
   const [full, setFull] = useState(false);
-
   useEffect(() => {
     bookings?.length && setBooks(bookings.length);
   }, [bookings]);

@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { BsFillPersonFill, BsPerson } from 'react-icons/bs';
 import useBooking from '../../hooks/api/useBooking';
+import usehotelContext from '../../hooks/useHotelContext';
 
-const Room = ({ room, selectedRoomId, setSelectedRoomId }) => {
+const Room = ({ room }) => {
+  const { selectedRoomId, setSelectedRoomId } = usehotelContext();
   const { bookings } = useBooking(room.id);
   const [books, setBooks] = useState(0);
   const [full, setFull] = useState(false);
-
   useEffect(() => {
     bookings?.length && setBooks(bookings.length);
   }, [bookings]);

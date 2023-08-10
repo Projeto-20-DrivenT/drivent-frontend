@@ -4,27 +4,31 @@ import Hotels from '../../../components/Hotels';
 import { useState } from 'react';
 import Rooms from '../../../components/Rooms';
 import useGetTicket from '../../../hooks/api/useGetTicket';
-import { bookingRoom } from '../../../services/bookingApi';
+import { bookingRoom, changeBooking } from '../../../services/bookingApi';
 import useToken from '../../../hooks/useToken';
 import useMyBooking from '../../../hooks/api/useMyBooking';
 import { useEffect } from 'react';
 import MyRoom from '../../../components/MyRoom';
+import usehotelContext from '../../../hooks/useHotelContext';
 
 export default function Hotel() {
+  const { selectedHotelId, selectedRoomId, changeRoom } = usehotelContext();
   const { ticket, ticketLoading } = useGetTicket();
   const { myBooking, myBookingLoading } = useMyBooking();
-  const [selectedHotel, setSelectedHotel] = useState({ id: undefined, Rooms: [] });
-  const [selectedHotelId, setSelectedHotelId] = useState(undefined);
-  const [selectedRoomId, setSelectedRoomId] = useState(undefined);
   const [isBooking, setIsBooking] = useState(false);
   const [hasBooking, setHasBooking] = useState(false);
-  const token = useToken();
 
+  const token = useToken();
   async function handleClick() {
     setIsBooking(true);
     const body = { roomId: selectedRoomId };
     try {
-      await bookingRoom(token, body);
+      if (changeRoom) {
+        await changeBooking(token, myBooking.id, body);
+      }
+      else {
+        await bookingRoom(token, body);
+      }
       window.location.reload();
     } catch (err) {
       console.log(err);
@@ -41,7 +45,7 @@ export default function Hotel() {
     <>
       <StyledTypography variant="h4">Escolha de hotel e quarto</StyledTypography>
       {(ticketLoading || myBookingLoading) && 'Loading'}
-      {!myBookingLoading ? hasBooking ? <MyRoom room={myBooking?.Room}/> : 
+      {!myBookingLoading ? (hasBooking && !changeRoom) ? <MyRoom room={myBooking?.Room}/> : 
         <> 
           {!ticketLoading && !(ticket?.status === 'PAID') && (
             <Message>
@@ -56,10 +60,14 @@ export default function Hotel() {
             </Message>
           )}
           {!ticketLoading && ticket?.status === 'PAID' && (!ticket?.TicketType?.isRemote && ticket?.TicketType?.includesHotel) && (
-            <Hotels selectedHotel={selectedHotel} setSelectedHotel={setSelectedHotel} selectedHotelId={selectedHotelId} setSelectedHotelId={setSelectedHotelId} setSelectedRoomId={setSelectedRoomId}/>
+            <Hotels />
           )}
-          {!ticketLoading && ticket?.status === 'PAID' && (!ticket?.TicketType?.isRemote && ticket?.TicketType?.includesHotel) && selectedHotelId && <Rooms hotelId={selectedHotelId} selectedRoomId={selectedRoomId} setSelectedRoomId={setSelectedRoomId}/>}
-          {!ticketLoading && ticket?.status === 'PAID' && (!ticket?.TicketType?.isRemote && ticket?.TicketType?.includesHotel) && selectedHotelId && selectedRoomId && <BookingButton onClick={handleClick} disabled={isBooking}>RESERVAR QUARTO</BookingButton>}
+          {!ticketLoading && ticket?.status === 'PAID' && (!ticket?.TicketType?.isRemote && ticket?.TicketType?.includesHotel) && selectedHotelId && 
+            <Rooms />
+          }
+          {!ticketLoading && ticket?.status === 'PAID' && (!ticket?.TicketType?.isRemote && ticket?.TicketType?.includesHotel) && selectedHotelId && selectedRoomId && 
+            <BookingButton onClick={handleClick} disabled={isBooking}>RESERVAR QUARTO</BookingButton>
+          }
         </>
         : ''
       }

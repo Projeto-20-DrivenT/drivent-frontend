@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import useRoom from '../../hooks/api/useRoom';
 import useHotelBooking from '../../hooks/api/useHotelBooking';
+import usehotelContext from '../../hooks/useHotelContext';
 
 function countRooms(hotel) {
   if (hotel?.Rooms?.length) {
@@ -15,7 +16,8 @@ function countRooms(hotel) {
   return [0, 0, 0];
 }
 
-const Hotel = ({ hotel, selectedHotel, setSelectedHotel, selectedHotelId, setSelectedHotelId, setSelectedRoomId }) => {
+const Hotel = ({ hotel }) => {
+  const { setSelectedHotel, selectedHotelId, setSelectedHotelId, setSelectedRoomId } = usehotelContext();
   const { rooms, /* roomsLoading, roomsError */ } = useRoom(hotel.id);
   const { hotelBookings } = useHotelBooking(hotel.id);
   let [singleCount, doubleCount, tripleCount] = countRooms(rooms);

@@ -2,8 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import useHotel from '../../hooks/api/useHotel';
 import useBooking from '../../hooks/api/useBooking';
+import usehotelContext from '../../hooks/useHotelContext';
 
 const MyRoom = ({ room }) => {
+  const { setChangeRoom } = usehotelContext();
   const { hotels, /* hotelsLoading, hotelsError */ } = useHotel();
   const { bookings } = useBooking(room.id);
   const myHotel = hotels?.filter(hotel => hotel.id === room.hotelId)[0];
@@ -21,7 +23,7 @@ const MyRoom = ({ room }) => {
   };
 
   function handleClick() {
-
+    setChangeRoom(true);
   }
   return (
     <>

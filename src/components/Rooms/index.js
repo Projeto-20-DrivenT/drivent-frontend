@@ -3,8 +3,10 @@ import styled from 'styled-components';
 import Room from '../Room';
 import useToken from '../../hooks/useToken';
 import { getRooms } from '../../services/roomApi';
+import usehotelContext from '../../hooks/useHotelContext';
 
-const Rooms = ({ hotelId, selectedRoomId, setSelectedRoomId }) => {
+const Rooms = () => {
+  const { selectedHotelId } = usehotelContext();
   const [rooms, setRooms] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const token = useToken();
@@ -22,8 +24,8 @@ const Rooms = ({ hotelId, selectedRoomId, setSelectedRoomId }) => {
     }
   };
   useEffect(() => {
-    fetchRooms(hotelId);
-  }, [hotelId]);
+    fetchRooms(selectedHotelId);
+  }, [selectedHotelId]);
 
   return (
     <>
@@ -31,12 +33,7 @@ const Rooms = ({ hotelId, selectedRoomId, setSelectedRoomId }) => {
       <RoomsContainer>
         {isLoading && 'Loading rooms...'}
         {(!isLoading && rooms?.length) ? rooms?.map((room, key) => 
-          <Room 
-            key={key} 
-            room={room} 
-            selectedRoomId={selectedRoomId} 
-            setSelectedRoomId={setSelectedRoomId} 
-          />) : 'Não há quartos cadastrados'
+          <Room key={key} room={room} />) : 'Não há quartos cadastrados'
         }
       </RoomsContainer>
     </>

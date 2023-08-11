@@ -15,6 +15,7 @@ import UserContext from '../../contexts/UserContext';
 import useSignIn from '../../hooks/api/useSignIn';
 
 import GithubSignin from '../../components/signin/githubSignin';
+import { useEffect } from 'react';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
@@ -26,6 +27,19 @@ export default function SignIn() {
   const { setUserData } = useContext(UserContext);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+
+    if(code) {
+      console.log(code);
+      const userData = ''; //TODO: rota de autenticação com github;
+      setUserData(userData);
+      toast('Login realizado com sucesso!');
+      navigate('/dashboard');
+    };
+  }, []);
   
   async function submit(event) {
     event.preventDefault();

@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import Button from '../Form/Button';
 import { AiFillGithub } from 'react-icons/ai';
 
-export default function GithubSignin() {
+export default function GithubSignin( { disabled } ) {
   function redirectGithub() {
     const params = new URLSearchParams({
       client_id: process.env.REACT_APP_CLIENT_ID,
@@ -14,7 +14,7 @@ export default function GithubSignin() {
   };
 
   return (
-    <GithubButton color="primary" fullWidth onClick={redirectGithub}>
+    <GithubButton color="primary" disabled={disabled} fullWidth onClick={redirectGithub}>
       <AiFillGithub size="30px" className='github'/> GITHUB
     </GithubButton>
   );

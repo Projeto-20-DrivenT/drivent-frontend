@@ -39,11 +39,14 @@ export default function SignIn() {
     const code = params.get('code');
 
     if(code) {
-      const userData =  await githubSignIn(code); 
-      console.log(userData);
-      setUserData(userData);
-      toast('Login realizado com sucesso!');
-      navigate('/dashboard');
+      try{
+        const userData =  await githubSignIn(code); 
+        setUserData(userData);
+        toast('Login realizado com sucesso!');
+        navigate('/dashboard');
+      } catch(err) {
+        toast('Não foi possível fazer o login!');
+      }
     }
   }
   

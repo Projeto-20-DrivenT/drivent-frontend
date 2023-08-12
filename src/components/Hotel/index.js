@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import useRoom from '../../hooks/api/useRoom';
+import useHotelBooking from '../../hooks/api/useHotelBooking';
+import usehotelContext from '../../hooks/useHotelContext';
 
-const Hotel = ({ hotel, selectedHotel, setSelectedHotel }) => {
-  function countRooms(hotel) {
+function countRooms(hotel) {
+  if (hotel?.Rooms?.length) {
     const capacities = hotel.Rooms.map((room) => room.capacity);
     const singleCount = capacities.filter((capacity) => capacity === 1).length;
     const doubleCount = capacities.filter((capacity) => capacity === 2).length;
@@ -10,25 +13,54 @@ const Hotel = ({ hotel, selectedHotel, setSelectedHotel }) => {
 
     return [singleCount, doubleCount, tripleCount];
   }
-  const [singleCount, doubleCount, tripleCount] = countRooms(hotel);
-  let types = '';
-  if (singleCount > 0) {
-    types += 'Single';
-  }
+  return [0, 0, 0];
+}
 
-  if (doubleCount > 0) {
-    types += singleCount > 0 ? ' e Double' : 'Double';
-  }
+const Hotel = ({ hotel }) => {
+  const { setSelectedHotel, selectedHotelId, setSelectedHotelId, setSelectedRoomId } = usehotelContext();
+  const { rooms, /* roomsLoading, roomsError */ } = useRoom(hotel.id);
+  const { hotelBookings } = useHotelBooking(hotel.id);
+  let [singleCount, doubleCount, tripleCount] = countRooms(rooms);
+  const [hotelCapacity, setHotelCapacity] = useState(0);
+  const [types, setTypes] = useState('');
 
-  if (tripleCount > 0) {
-    types += singleCount > 0 || doubleCount > 0 ? ' e Triple' : 'Triple';
-  }
+  useEffect(() => {
+    [singleCount, doubleCount, tripleCount] = countRooms(rooms);
+    setHotelCapacity(1*singleCount + 2*doubleCount + 3*tripleCount);
+  }, [rooms]);
+
+  useEffect(() => {
+    let strTypes = '';
+
+    if (singleCount > 0) {
+      strTypes += 'Single';
+    }
+
+    if (doubleCount > 0) {
+      strTypes += singleCount > 0 ? ' e Double' : 'Double';
+    }
+
+    if (tripleCount > 0) {
+      strTypes += singleCount > 0 || doubleCount > 0 ? ' e Triple' : 'Triple';
+    }
+
+    setTypes(strTypes);
+  }, [singleCount, doubleCount, tripleCount]);
+
+  const handleClick = () => {
+    if (selectedHotelId !== hotel?.id) {
+      setSelectedHotel({ ...rooms });
+      setSelectedHotelId(hotel.id);
+      setSelectedRoomId(undefined);
+    }
+    return;
+  };
 
   return (
-    <HotelContainer onClick={() => setSelectedHotel(hotel)} selected={selectedHotel.id === hotel.id}>
-      <Img src={hotel.image} />
+    <HotelContainer onClick={handleClick} selected={selectedHotelId === hotel?.id} >
+      <Img src={hotel?.image} />
       <div>
-        <H1>{hotel.name}</H1>
+        <H1>{hotel?.name}</H1>
       </div>
       <div>
         <H2>Tipos de acomodação:</H2>
@@ -36,7 +68,7 @@ const Hotel = ({ hotel, selectedHotel, setSelectedHotel }) => {
       </div>
       <div>
         <H2>Vagas disponíveis:</H2>
-        <P>{hotel.vacancies}</P>
+        <P>{hotelCapacity - hotelBookings?.length}</P>
       </div>
     </HotelContainer>
   );

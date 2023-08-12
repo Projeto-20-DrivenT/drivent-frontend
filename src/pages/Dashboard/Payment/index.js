@@ -28,11 +28,11 @@ export default function Payment() {
   );
 }
 
-const StyledTypography = styled(Typography)`
+export const StyledTypography = styled(Typography)`
   margin-bottom: 20px!important;
 `;
 
-const Message = styled.div`
+export const Message = styled.div`
   color: #8E8E8E;
   width: 100%;
   height: 90%;

@@ -29,7 +29,7 @@
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
+    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -134,6 +134,7 @@
   "devDependencies": {
     "git-commit-msg-linter": "^3.2.8",
     "husky": "^7.0.2",
-    "lint-staged": "^11.1.2"
+    "lint-staged": "^11.1.2",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.0"
   }
 }

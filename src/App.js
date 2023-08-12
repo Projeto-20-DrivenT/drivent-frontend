@@ -21,6 +21,7 @@ import { UserProvider } from './contexts/UserContext';
 
 import useToken from './hooks/useToken';
 import { TicketProvider } from './contexts/TicketContext';
+import { HotelProvider } from './contexts/HotelContext';
 
 export default function App() {
   return (
@@ -29,29 +30,31 @@ export default function App() {
       <TicketProvider>
         <EventInfoProvider>
           <UserProvider>
-            <Router>
-              <Routes>
-                <Route path="/" element={<Countdown />} />
-                <Route path="/enroll" element={<Enroll />} />
-                <Route path="/sign-in" element={<SignIn />} />
+            <HotelProvider>
+              <Router>
+                <Routes>
+                  <Route path="/" element={<Countdown />} />
+                  <Route path="/enroll" element={<Enroll />} />
+                  <Route path="/sign-in" element={<SignIn />} />
 
-                <Route
-                  path="/dashboard"
-                  element={
-                    <ProtectedRouteGuard>
-                      <Dashboard />
-                    </ProtectedRouteGuard>
-                  }
-                >
-                  <Route path="subscription" element={<FillSubscription />} />
-                  <Route path="payment" element={<Payment />} />
-                  <Route path="hotel" element={<Hotel />} />
-                  <Route path="activities" element={<Activities />} />
-                  <Route path="certificate" element={<Certificate />} />
-                  <Route index path="*" element={<Navigate to="/dashboard/subscription" />} />
-                </Route>
-              </Routes>
-            </Router>
+                  <Route
+                    path="/dashboard"
+                    element={
+                      <ProtectedRouteGuard>
+                        <Dashboard />
+                      </ProtectedRouteGuard>
+                    }
+                  >
+                    <Route path="subscription" element={<FillSubscription />} />
+                    <Route path="payment" element={<Payment />} />
+                    <Route path="hotel" element={<Hotel />} />
+                    <Route path="activities" element={<Activities />} />
+                    <Route path="certificate" element={<Certificate />} />
+                    <Route index path="*" element={<Navigate to="/dashboard/subscription" />} />
+                  </Route>
+                </Routes>
+              </Router>
+            </HotelProvider>
           </UserProvider>
         </EventInfoProvider>
       </TicketProvider>

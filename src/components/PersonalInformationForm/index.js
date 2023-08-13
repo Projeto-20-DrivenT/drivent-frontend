@@ -45,7 +45,7 @@ export default function PersonalInformationForm() {
       const newData = {
         name: data.name,
         cpf: data.cpf.replaceAll('.', '').replaceAll('-', ''),
-        birthday: dayjs(data.birthday).toISOString(),
+        birthday: data.birthday ? dayjs(data.birthday).format('YYYY-MM-DD') : null,
         address: {
           cep: data.cep,
           street: data.street,
@@ -62,6 +62,7 @@ export default function PersonalInformationForm() {
         await saveEnrollment(newData);
         toast('Informações salvas com sucesso!');
       } catch (err) {
+        console.log(err);
         toast('Não foi possível salvar suas informações!');
       }
     },
@@ -164,10 +165,8 @@ export default function PersonalInformationForm() {
               label="Data de Nascimento"
               inputVariant="outlined"
               clearable
-              value={dayjs(data.birthday).format('YYYY-MM-DD').toString()}
-              onChange={(date) => {
-                customHandleChange('birthday', (d) => d && dayjs(d).format('YYYY-MM-DD'))(date);
-              }}
+              value={data.birthday || null}
+              onChange={(date) => customHandleChange('birthday')(date)}
             />
             {errors.birthday && <ErrorMsg>{errors.birthday}</ErrorMsg>}
           </InputWrapper>

@@ -10,7 +10,7 @@ import useProcessPayment from '../../hooks/api/useProcessPayment';
 import { useState } from 'react';
 
 export default function PaymentForms({ setConfirmed, ticketId }) {
-  const { payment, paymentLoading, paymentError, processPayment } = useProcessPayment();
+  const {  paymentLoading, processPayment } = useProcessPayment();
   const [issuer, setIssuer] = useState('');
 
   const {

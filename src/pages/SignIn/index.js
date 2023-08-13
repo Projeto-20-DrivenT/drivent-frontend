@@ -13,17 +13,42 @@ import EventInfoContext from '../../contexts/EventInfoContext';
 import UserContext from '../../contexts/UserContext';
 
 import useSignIn from '../../hooks/api/useSignIn';
+import useGithubSignIn from '../../hooks/api/useGithubSignIn';
+
+import GithubSignin from '../../components/signin/githubSignin';
+import { useEffect } from 'react';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const { loadingSignIn, signIn } = useSignIn();
+  const { githubInLoading, githubSignIn } = useGithubSignIn();
 
   const { eventInfo } = useContext(EventInfoContext);
   const { setUserData } = useContext(UserContext);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    handleGithubSignIn();
+  }, []);
+
+  async function handleGithubSignIn() {
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+
+    if(code) {
+      try{
+        const userData =  await githubSignIn(code); 
+        setUserData(userData);
+        toast('Login realizado com sucesso!');
+        navigate('/dashboard');
+      } catch(err) {
+        toast('Não foi possível fazer o login!');
+      }
+    }
+  }
   
   async function submit(event) {
     event.preventDefault();
@@ -49,9 +74,11 @@ export default function SignIn() {
         <form onSubmit={submit}>
           <Input label="E-mail" type="text" fullWidth value={email} onChange={e => setEmail(e.target.value)} />
           <Input label="Senha" type="password" fullWidth value={password} onChange={e => setPassword(e.target.value)} />
-          <Button type="submit" color="primary" fullWidth disabled={loadingSignIn}>Entrar</Button>
+          <Button type="submit" color="primary" fullWidth disabled={loadingSignIn || githubInLoading}>Entrar</Button>
+          <GithubSignin disabled={loadingSignIn || githubInLoading}/>
         </form>
       </Row>
+      
       <Row>
         <Link to="/enroll">Não possui login? Inscreva-se</Link>
       </Row>

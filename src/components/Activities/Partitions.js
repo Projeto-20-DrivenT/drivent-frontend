@@ -24,7 +24,6 @@ const Divisions = styled.div`
   padding: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
 
   ::-webkit-scrollbar {
@@ -43,11 +42,11 @@ const Divisions = styled.div`
     position: absolute;
     color: #7B7B7B;
     font-size: 1.3dvh;
-    top: -7%;
+    top: -4dvh;
     z-index: 2;
 
     @media (max-width: 600px) {
-      top: -18%;
+        
     }
   }
 `;

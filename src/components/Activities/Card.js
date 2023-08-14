@@ -1,25 +1,39 @@
 import styled from 'styled-components';
 import soldOffImg from '../../assets/images/ant-design_close-circle-outlined.svg';
 import availableImg from '../../assets/images/pepicons_enter.svg';
+import registerImg from '../../assets/images/akar-icons_circle-check.svg';
+import { useState } from 'react';
 
 export default function Card({ activity }) {
+  const [registred, setRegistred] = useState(false);
+  function handleRegister(activity, registred) {
+    if (activity.registration >= activity.capacity)
+      return alert('Atividade Esgotada !');
+    if (registred)
+      return alert('Você já está registrado nessa atividade !');
+
+    // eslint-disable-next-line no-restricted-globals
+    const result = confirm('Deseja se cadastrar nessa atividade?');
+    setRegistred(result);
+  }
+
   console.log(activity);
   return (
-    <Activity soldOff={activity.registration >= activity.capacity}>
+    <Activity soldOff={activity.registration >= activity.capacity} onClick={() => handleRegister(activity, registred)} registred={registred}>
       <div className='atvName'>
         <h2>{activity.name}</h2>
         <h3>{`${new Date(activity.startTime).getHours()}:${new Date(activity.startTime).getMinutes()} - ${new Date(activity.endTime).getHours()}:${new Date(activity.endTime).getMinutes()}`}</h3>
       </div>
       <div className='vacancies'>
-        <img src={activity.registration >= activity.capacity ? soldOffImg : availableImg} alt={activity.registration < activity.capacity ? 'soldOffImg' : 'availableImg'} />
-        <h2>{activity.registration < activity.capacity ? `${activity.capacity - activity.registration} vagas` : 'Esgotado'} </h2>
+        <img src={registred ? registerImg : activity.registration >= activity.capacity ? soldOffImg : availableImg} alt={activity.registration < activity.capacity ? 'soldOffImg' : 'availableImg'} />
+        <h2>{registred ? 'Inscrito' : activity.registration < activity.capacity ? `${activity.capacity - activity.registration} vagas` : 'Esgotado'} </h2>
       </div>
     </Activity>
   );
 }
 
 const Activity = styled.div`
-  background: rgba(241, 241, 241, 1);
+  background: ${props => props.registred ? '#D0FFDB' : 'rgba(241, 241, 241, 1)'};
   width: 100%;
   height: 9dvh;
   border-radius: 5px;

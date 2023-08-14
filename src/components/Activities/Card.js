@@ -31,6 +31,9 @@ export default function Card({ activity }) {
     });
   }
 
+  // ALTERAR FORMA QUE A DATA APARECE
+  // ESTÁ DESSA MANEIRA DEVIDO A FORMA COMO O SEDE COLOCA OS DADOS NO DB
+
   return (
     <>
       <Activity soldOff={activity.registration >= activity.capacity} onClick={() => handleRegister(activity, registred)} registred={registred} hours={Math.abs((new Date(activity.startTime).getHours()) - (new Date(activity.endTime).getHours()))}>
@@ -65,7 +68,7 @@ const Activity = styled.div`
     padding: 10px 5px 10px 10px;
     min-height: ${props => `${props.hours * 40}px`};
   }
-  
+
 
   .container {
     height: 100%;

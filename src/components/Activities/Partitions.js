@@ -35,7 +35,7 @@ const Divisions = styled.div`
   }
 
   @media (max-width: 600px) {
-      height: 14dvh;
+      height: 20dvh;
   }
 
   p {
@@ -46,7 +46,8 @@ const Divisions = styled.div`
     z-index: 2;
 
     @media (max-width: 600px) {
-        
+        position: relative;
+        top: -1dvh;
     }
   }
 `;

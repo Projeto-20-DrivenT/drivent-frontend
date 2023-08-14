@@ -7,7 +7,7 @@ import api from '../../services/api.js';
 import useToken from '../../hooks/useToken.js';
 
 export default function Card({ activity }) {
-  const [registred, setRegistred] = useState(false);
+  const [registred, setRegistred] = useState(activity.registeredByUser);
   const token = useToken();
 
   function handleRegister(activity, registred) {

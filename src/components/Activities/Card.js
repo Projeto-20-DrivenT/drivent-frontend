@@ -65,6 +65,7 @@ const Activity = styled.div`
     padding: 10px 5px 10px 10px;
     min-height: ${props => `${props.hours * 40}px`};
   }
+  
 
   .container {
     height: 100%;

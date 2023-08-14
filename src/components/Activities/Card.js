@@ -26,14 +26,11 @@ export default function Card({ activity }) {
     }).then(() => {
       setRegistred(result);
     }).catch((err) => {
-      console.log(err);
-      console.log(err.message);
       alert(err.message);
       setRegistred(false);
     });
   }
 
-  console.log(activity);
   return (
     <>
       <Activity soldOff={activity.registration >= activity.capacity} onClick={() => handleRegister(activity, registred)} registred={registred} hours={Math.abs((new Date(activity.startTime).getHours()) - (new Date(activity.endTime).getHours()))}>
@@ -41,9 +38,11 @@ export default function Card({ activity }) {
           <h2>{activity.name}</h2>
           <h3>{`${new Date(activity.startTime).getHours()}:${new Date(activity.startTime).getMinutes()} - ${new Date(activity.endTime).getHours()}:${new Date(activity.endTime).getMinutes()}`}</h3>
         </div>
-        <div className='vacancies'>
-          <img src={registred ? registerImg : activity.registration >= activity.capacity ? soldOffImg : availableImg} alt={activity.registration < activity.capacity ? 'soldOffImg' : 'availableImg'} />
-          <h2>{registred ? 'Inscrito' : activity.registration < activity.capacity ? `${activity.capacity - activity.registration} vagas` : 'Esgotado'} </h2>
+        <div className='container'>
+          <div className='vacancies'>
+            <img src={registred ? registerImg : activity.registration >= activity.capacity ? soldOffImg : availableImg} alt={activity.registration < activity.capacity ? 'soldOffImg' : 'availableImg'} />
+            <h2>{registred ? 'Inscrito' : activity.registration < activity.capacity ? `${activity.capacity - activity.registration} vagas` : 'Esgotado'} </h2>
+          </div>
         </div>
       </Activity>
     </>
@@ -54,7 +53,7 @@ export default function Card({ activity }) {
 const Activity = styled.div`
   background: ${props => props.registred ? '#D0FFDB' : 'rgba(241, 241, 241, 1)'};
   width: 100%;
-  height: ${props => `${props.hours * 80}px`};
+  min-height: ${props => `${props.hours * 80}px`};
   border-radius: 5px;
   display: flex;
   align-items: flex-start;
@@ -64,6 +63,16 @@ const Activity = styled.div`
 
   @media (max-width: 600px) {
     padding: 10px 5px 10px 10px;
+    min-height: ${props => `${props.hours * 40}px`};
+  }
+  
+
+  .container {
+    height: 100%;
+    border-left: 1px solid rgba(207, 207, 207, 1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .atvName {
@@ -78,7 +87,6 @@ const Activity = styled.div`
   }
 
   .vacancies {
-    border-left: 1px solid rgba(207, 207, 207, 1);
     width: 5dvw;
     height: 5dvh;
     display: flex;

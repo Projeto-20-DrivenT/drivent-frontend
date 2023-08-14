@@ -19,7 +19,6 @@ position: relative;
     border: 1px solid rgba(215, 215, 215, 1);
     display: ${props => (props.daySelected ? 'flex' : 'none')};
     width: 100%;
-    height: 46dvh;
 
     @media (max-width: 600px) {
         flex-direction: column;

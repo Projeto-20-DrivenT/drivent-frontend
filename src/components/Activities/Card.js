@@ -3,9 +3,13 @@ import soldOffImg from '../../assets/images/ant-design_close-circle-outlined.svg
 import availableImg from '../../assets/images/pepicons_enter.svg';
 import registerImg from '../../assets/images/akar-icons_circle-check.svg';
 import { useState } from 'react';
+import api from '../../services/api.js';
+import useToken from '../../hooks/useToken.js';
 
 export default function Card({ activity }) {
   const [registred, setRegistred] = useState(false);
+  const token = useToken();
+
   function handleRegister(activity, registred) {
     if (activity.registration >= activity.capacity)
       return alert('Atividade Esgotada !');
@@ -14,7 +18,19 @@ export default function Card({ activity }) {
 
     // eslint-disable-next-line no-restricted-globals
     const result = confirm('Deseja se cadastrar nessa atividade?');
-    setRegistred(result);
+    
+    result && api.post('/registration', { activityId: activity.id }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }).then(() => {
+      setRegistred(result);
+    }).catch((err) => {
+      console.log(err);
+      console.log(err.message);
+      alert(err.message);
+      setRegistred(false);
+    });
   }
 
   console.log(activity);

@@ -14,6 +14,7 @@ export default function SmallContainer({ d, daySelected }) {
 }
 
 const Container = styled.div`
+position: relative;
 .atvContainer {
     border: 1px solid rgba(215, 215, 215, 1);
     display: ${props => (props.daySelected ? 'flex' : 'none')};

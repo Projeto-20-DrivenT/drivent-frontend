@@ -18,7 +18,7 @@ export default function Card({ activity }) {
 
     // eslint-disable-next-line no-restricted-globals
     const result = confirm('Deseja se cadastrar nessa atividade?');
-    
+
     result && api.post('/registration', { activityId: activity.id }, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -35,28 +35,32 @@ export default function Card({ activity }) {
 
   console.log(activity);
   return (
-    <Activity soldOff={activity.registration >= activity.capacity} onClick={() => handleRegister(activity, registred)} registred={registred}>
-      <div className='atvName'>
-        <h2>{activity.name}</h2>
-        <h3>{`${new Date(activity.startTime).getHours()}:${new Date(activity.startTime).getMinutes()} - ${new Date(activity.endTime).getHours()}:${new Date(activity.endTime).getMinutes()}`}</h3>
-      </div>
-      <div className='vacancies'>
-        <img src={registred ? registerImg : activity.registration >= activity.capacity ? soldOffImg : availableImg} alt={activity.registration < activity.capacity ? 'soldOffImg' : 'availableImg'} />
-        <h2>{registred ? 'Inscrito' : activity.registration < activity.capacity ? `${activity.capacity - activity.registration} vagas` : 'Esgotado'} </h2>
-      </div>
-    </Activity>
+    <>
+      <Activity soldOff={activity.registration >= activity.capacity} onClick={() => handleRegister(activity, registred)} registred={registred} hours={Math.abs((new Date(activity.startTime).getHours()) - (new Date(activity.endTime).getHours()))}>
+        <div className='atvName'>
+          <h2>{activity.name}</h2>
+          <h3>{`${new Date(activity.startTime).getHours()}:${new Date(activity.startTime).getMinutes()} - ${new Date(activity.endTime).getHours()}:${new Date(activity.endTime).getMinutes()}`}</h3>
+        </div>
+        <div className='vacancies'>
+          <img src={registred ? registerImg : activity.registration >= activity.capacity ? soldOffImg : availableImg} alt={activity.registration < activity.capacity ? 'soldOffImg' : 'availableImg'} />
+          <h2>{registred ? 'Inscrito' : activity.registration < activity.capacity ? `${activity.capacity - activity.registration} vagas` : 'Esgotado'} </h2>
+        </div>
+      </Activity>
+    </>
+
   );
 }
 
 const Activity = styled.div`
   background: ${props => props.registred ? '#D0FFDB' : 'rgba(241, 241, 241, 1)'};
   width: 100%;
-  height: 9dvh;
+  height: ${props => `${props.hours * 80}px`};
   border-radius: 5px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  padding: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
 
   @media (max-width: 600px) {
     padding: 10px 5px 10px 10px;
